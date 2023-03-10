@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/sb3?currentSchema=sb3
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+
+server:
+  port: 8080
