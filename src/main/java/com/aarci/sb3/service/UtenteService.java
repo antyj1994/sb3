@@ -1,6 +1,7 @@
 package com.aarci.sb3.service;
 
 import com.aarci.sb3.command.CreateUserCommand;
+import com.aarci.sb3.command.UpdateUserCommand;
 import com.aarci.sb3.entity.Utente;
 import com.aarci.sb3.repository.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,26 @@ public class UtenteService {
         }
         this.utenteRepository.save(utente);
         return utente;
+    }
+    public Utente update(UpdateUserCommand command){
+        Optional<Utente> esistente = this.utenteRepository.findById(command.getOldEmail());
+        if (esistente.isEmpty()){
+            throw new RuntimeException("L'utente non esiste");
+        }
+        Optional<Utente> nuovaMailEsistente = this.utenteRepository.findById(command.getNewEmail());
+        if (nuovaMailEsistente.isPresent()){
+            throw new RuntimeException("La mail gia' esiste");
+        }
+        Utente utente= esistente.get();
+        utente.setEmail(command.getNewEmail());
+        utente.setUsername(command.getUsername());
+        utente.setPassword(command.getPassword());
+        this.utenteRepository.save(utente);
+        return utente;
+    }
+    public Utente delete(String email){
+        
+        return null;
     }
 
 }
