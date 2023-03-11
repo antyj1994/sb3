@@ -50,11 +50,16 @@ public class UtenteService {
             throw new RuntimeException("La mail gia' esiste");
         }
         Utente utente= esistente.get();
-        utente.setEmail(command.getNewEmail());
+        utente.setEmail(command.getOldEmail());
         utente.setUsername(command.getUsername());
         utente.setPassword(command.getPassword());
-        this.utenteRepository.save(utente);
-        return utente;
+        Utente utenteNew = new Utente();
+        utenteNew.setPassword(command.getPassword());
+        utenteNew.setEmail(command.getNewEmail());
+        utenteNew.setUsername(command.getUsername());
+        this.utenteRepository.delete(utente);
+        this.utenteRepository.save(utenteNew);
+        return utenteNew;
     }
     public Utente delete(String email){
         Optional<Utente> eliminato= this.utenteRepository.findById(email);
@@ -62,9 +67,6 @@ public class UtenteService {
             throw new RuntimeException("L'utente non esiste");
         }
         Utente utente= eliminato.get();
-        utente.setEmail(eliminato.get().getEmail());
-        utente.setPassword(eliminato.get().getPassword());
-        utente.setUsername(eliminato.get().getUsername());
         this.utenteRepository.delete(utente);
         return utente;
     }
