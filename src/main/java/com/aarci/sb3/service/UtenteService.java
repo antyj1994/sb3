@@ -57,8 +57,16 @@ public class UtenteService {
         return utente;
     }
     public Utente delete(String email){
-        
-        return null;
+        Optional<Utente> eliminato= this.utenteRepository.findById(email);
+        if(eliminato.isEmpty()){
+            throw new RuntimeException("L'utente non esiste");
+        }
+        Utente utente= eliminato.get();
+        utente.setEmail(eliminato.get().getEmail());
+        utente.setPassword(eliminato.get().getPassword());
+        utente.setUsername(eliminato.get().getUsername());
+        this.utenteRepository.delete(utente);
+        return utente;
     }
 
 }
