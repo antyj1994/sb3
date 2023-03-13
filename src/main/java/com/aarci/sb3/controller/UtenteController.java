@@ -1,12 +1,12 @@
 package com.aarci.sb3.controller;
 
 import com.aarci.sb3.command.CreateUserCommand;
+import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.entity.Utente;
+import com.aarci.sb3.repository.UtenteRepository;
 import com.aarci.sb3.service.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -17,8 +17,11 @@ import java.util.List;
 @RestController
 public class UtenteController {
 
-    @Autowired
     private UtenteService utenteService;
+
+    public UtenteController(UtenteService utenteService){
+        this.utenteService = utenteService;
+    }
 
     @GetMapping(path = "/utente/{email}")
     public Utente getUtente(@PathVariable("email") String email){
@@ -31,7 +34,7 @@ public class UtenteController {
     }
 
     @PostMapping(path = "/utente")
-    public Utente createUtente(@RequestBody CreateUserCommand command){
+    public UtenteDTO createUtente(@RequestBody CreateUserCommand command){
         return this.utenteService.create(command);
     }
 

@@ -1,6 +1,7 @@
 package com.aarci.sb3.service;
 
 import com.aarci.sb3.command.CreateUserCommand;
+import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.command.UpdateUserCommand;
 import com.aarci.sb3.entity.Utente;
 import com.aarci.sb3.repository.UtenteRepository;
@@ -28,7 +29,7 @@ public class UtenteService {
         return this.utenteRepository.findAll();
     }
 
-    public Utente create(CreateUserCommand command){
+    public UtenteDTO create(CreateUserCommand command){
         Utente utente = new Utente();
         utente.setEmail(command.getEmail());
         utente.setUsername(command.getUsername());
@@ -38,8 +39,9 @@ public class UtenteService {
             throw new RuntimeException("L'utente e' gia' esistente");
         }
         this.utenteRepository.save(utente);
-        return utente;
+        return convertToDTO(utente);
     }
+
     public Utente update(UpdateUserCommand command){
         Optional<Utente> esistente = this.utenteRepository.findById(command.getOldEmail());
         if (esistente.isEmpty()){
@@ -49,7 +51,7 @@ public class UtenteService {
         if (nuovaMailEsistente.isPresent()){
             throw new RuntimeException("La mail gia' esiste");
         }
-        Utente utente= esistente.get();
+        Utente utente = esistente.get();
         utente.setEmail(command.getOldEmail());
         utente.setUsername(command.getUsername());
         utente.setPassword(command.getPassword());
@@ -69,6 +71,14 @@ public class UtenteService {
         Utente utente= eliminato.get();
         this.utenteRepository.delete(utente);
         return utente;
+    }
+
+    private UtenteDTO convertToDTO(Utente utente){
+        UtenteDTO utenteDTO = new UtenteDTO();
+        utenteDTO.setEmail(utente.getEmail());
+        utenteDTO.setUsername(utente.getUsername());
+        utenteDTO.setPassword(utente.getPassword());
+        return utenteDTO;
     }
 
 }
