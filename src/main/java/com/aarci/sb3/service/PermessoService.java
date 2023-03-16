@@ -8,16 +8,20 @@ import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.entity.Permesso;
 import com.aarci.sb3.entity.Utente;
 import com.aarci.sb3.repository.PermessoRepository;
+import com.aarci.sb3.utility.DTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.aarci.sb3.utility.DTOConverter.convertToDTO;
+
 @Service
 public class PermessoService {
     @Autowired
     private PermessoRepository permessoRepository;
-    public Object create(CreatePermessoCommand command){
+    public PermessoDTO create(CreatePermessoCommand command){
         Permesso permesso = new Permesso();
         permesso.setId(command.getId());
         permesso.setNome(command.getNome());
@@ -27,7 +31,7 @@ public class PermessoService {
             throw new RuntimeException("Il permesso e' gia' esistente");
         }
         this.permessoRepository.save(permesso);
-        return convertToDTO(permesso);
+        return DTOConverter.convertToDTO(permesso);
     }
     public Permesso getPermesso(Integer id){
         Optional<Permesso> permessoOptional = this.permessoRepository.findById(id);
@@ -36,13 +40,7 @@ public class PermessoService {
         }
         return permessoOptional.get();
     }
-    private PermessoDTO convertToDTO(Permesso permesso){
-        PermessoDTO permessoDTO = new PermessoDTO();
-        permessoDTO.setId(permesso.getId());
-        permessoDTO.setNome(permesso.getNome());
-        permessoDTO.setDescrizione(permesso.getDescrizione());
-        return permessoDTO;
-    }
+
     public List<Permesso> getAll(){
         return this.permessoRepository.findAll();
     }

@@ -1,10 +1,9 @@
 package com.aarci.sb3.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.Set;
 
 @Entity
 @Table(name="permesso")
@@ -18,5 +17,11 @@ public class Permesso {
     private String nome;
     @Column(name = "descrizione")
     private String descrizione;
+    /*@ManyToMany
+    @JoinTable(
+            name = "permessoutente",
+            joinColumns = @JoinColumn(name="id_permesso"),
+            inverseJoinColumns = @JoinColumn(name = "email_utente"))
+    Set<Utente> utenti;*/
 
 }

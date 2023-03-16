@@ -1,6 +1,7 @@
 package com.aarci.sb3.controller;
 
 import com.aarci.sb3.command.CreateUserCommand;
+import com.aarci.sb3.dto.PermessoDTO;
 import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.entity.Utente;
 import com.aarci.sb3.repository.UtenteRepository;
@@ -28,9 +29,16 @@ public class UtenteController {
         return this.utenteService.getUtente(email);
     }
 
+
     @GetMapping(path = "/utente")
     public List<Utente> getAll(){
         return this.utenteService.getAll();
+    }
+
+    @GetMapping(path = "/{email}/permesso")
+    public List<PermessoDTO> getAllPermesso(@PathVariable("email") String email){
+
+        return this.utenteService.getAllPermesso(email);
     }
 
     @PostMapping(path = "/utente")

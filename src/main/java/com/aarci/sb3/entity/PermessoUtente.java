@@ -1,17 +1,18 @@
 package com.aarci.sb3.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
 /*@Entity
 @Table(name = "permessoUtente")
 @Data
+
 public class PermessoUtente {
-    @Column(name = "email")
-    private String email;
-    @Column(name = "permesso")
-    private List<Permesso> permessoList;
+
+
 }*/

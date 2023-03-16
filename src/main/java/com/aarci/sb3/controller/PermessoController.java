@@ -3,6 +3,7 @@ package com.aarci.sb3.controller;
 import com.aarci.sb3.command.CreatePermessoCommand;
 import com.aarci.sb3.command.CreateUserCommand;
 import com.aarci.sb3.command.UpdateUserCommand;
+import com.aarci.sb3.dto.PermessoDTO;
 import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.entity.Permesso;
 import com.aarci.sb3.entity.Utente;
@@ -22,7 +23,7 @@ public class PermessoController {
     private PermessoService permessoService;
 
     @PostMapping(path = "/permesso")
-    public Object createPermesso(@RequestBody CreatePermessoCommand command){
+    public PermessoDTO createPermesso(@RequestBody CreatePermessoCommand command){
         return this.permessoService.create(command);
     }
 

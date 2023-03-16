@@ -1,15 +1,21 @@
 package com.aarci.sb3.service;
 
 import com.aarci.sb3.command.CreateUserCommand;
+import com.aarci.sb3.dto.PermessoDTO;
 import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.command.UpdateUserCommand;
+import com.aarci.sb3.entity.Permesso;
 import com.aarci.sb3.entity.Utente;
 import com.aarci.sb3.repository.UtenteRepository;
+import com.aarci.sb3.utility.DTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.aarci.sb3.utility.DTOConverter.convertToDTO;
 
 @Service
 public class UtenteService {
@@ -29,6 +35,18 @@ public class UtenteService {
         return this.utenteRepository.findAll();
     }
 
+    public List<PermessoDTO> getAllPermesso(String email){
+        Optional<Utente> utenteOptional = this.utenteRepository.findById(email);
+        if (utenteOptional.isEmpty()){
+            throw new RuntimeException("User doesn't exists");
+        }
+        List<PermessoDTO> permessi = new ArrayList<>();
+        for(Permesso permesso: utenteOptional.get().getPermessi()){
+            permessi.add(DTOConverter.convertToDTO(permesso));
+        }
+        return permessi;
+    }
+
     public UtenteDTO create(CreateUserCommand command){
         Utente utente = new Utente();
         utente.setEmail(command.getEmail());
@@ -39,7 +57,7 @@ public class UtenteService {
             throw new RuntimeException("L'utente e' gia' esistente");
         }
         this.utenteRepository.save(utente);
-        return convertToDTO(utente);
+        return DTOConverter.convertToDTO(utente);
     }
 
     public Utente update(UpdateUserCommand command){
@@ -73,12 +91,6 @@ public class UtenteService {
         return utente;
     }
 
-    private UtenteDTO convertToDTO(Utente utente){
-        UtenteDTO utenteDTO = new UtenteDTO();
-        utenteDTO.setEmail(utente.getEmail());
-        utenteDTO.setUsername(utente.getUsername());
-        utenteDTO.setPassword(utente.getPassword());
-        return utenteDTO;
-    }
+
 
 }
