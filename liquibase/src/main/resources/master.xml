@@ -1,0 +1,38 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+										http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!-- Properties file -->
+    <property file="src/main/resources/liquibase-local.properties" context="local"/>
+
+    <changeSet author="aarci" id="sb3-1-schema" logicalFilePath="sb3" labels="0.0.1">
+        <sqlFile encoding="utf8"
+                 path="sql/sb3-1/schema.sql"
+                 relativeToChangelogFile="true" splitStatements="true"
+                 stripComments="true" />
+        <rollback>
+            <sqlFile encoding="utf8"
+                     path="sql/sb3-1/rollback/rb-schema.sql"
+                     relativeToChangelogFile="true" splitStatements="true"
+                     stripComments="true" />
+        </rollback>
+    </changeSet>
+
+    <changeSet author="aarci" id="sb3-1-tables" logicalFilePath="sb3" labels="0.0.1">
+        <sqlFile encoding="utf8"
+                 path="sql/sb3-1/tables.sql"
+                 relativeToChangelogFile="true" splitStatements="true"
+                 stripComments="true" />
+        <rollback>
+            <sqlFile encoding="utf8"
+                     path="sql/sb3-1/rollback/rb-tables.sql"
+                     relativeToChangelogFile="true" splitStatements="true"
+                     stripComments="true" />
+        </rollback>
+    </changeSet>
+
+
+</databaseChangeLog>

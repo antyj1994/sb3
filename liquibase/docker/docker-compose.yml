@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  sb3-postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    container_name: sb3-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sb3
