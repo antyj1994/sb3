@@ -36,7 +36,7 @@ public class PermessoService {
     public Permesso getPermesso(Integer id){
         Optional<Permesso> permessoOptional = this.permessoRepository.findById(id);
         if (permessoOptional.isEmpty()){
-            throw new RuntimeException("Il permesso cercato non esiste");
+            throw new RuntimeException("Permissions doesn't exists");
         }
         return permessoOptional.get();
     }

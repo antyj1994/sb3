@@ -40,6 +40,10 @@ public class UtenteController {
 
         return this.utenteService.getAllPermesso(email);
     }
+    @PostMapping(path = "/{email}/{id_permesso}")
+    public Utente aggiungiPermesso(@PathVariable("email") String email, @PathVariable("id_permesso") Integer id_permesso ){
+        return this.utenteService.aggiungiPermesso(email, id_permesso);
+    }
 
     @PostMapping(path = "/utente")
     public UtenteDTO createUtente(@RequestBody CreateUserCommand command){
@@ -59,6 +63,10 @@ public class UtenteController {
     @ExceptionHandler({ RuntimeException.class })
     public ResponseEntity<Object> handleException(Exception ex) {
         return new ResponseEntity<Object>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @DeleteMapping(path = "/{email}/{id_permesso}")
+    public Utente deletePermessoUtente(@PathVariable("email") String email, @PathVariable("id_permesso") Integer id_permesso){
+        return this.utenteService.deletePermessoUtente(email, id_permesso);
     }
 
 }
