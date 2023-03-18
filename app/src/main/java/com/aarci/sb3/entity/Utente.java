@@ -2,9 +2,11 @@ package com.aarci.sb3.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name="utente")
@@ -26,6 +28,6 @@ public class Utente {
             name = "permessoutente",
             joinColumns = @JoinColumn(name="email_utente"),
             inverseJoinColumns = @JoinColumn(name = "id_permesso"))
-    Set<Permesso> permessi;
+    Set<Permesso> permessi = new HashSet<>();
 
 }
