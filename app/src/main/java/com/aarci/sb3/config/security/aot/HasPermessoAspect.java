@@ -1,6 +1,8 @@
 package com.aarci.sb3.config.security.aot;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,11 +17,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Log4j2
 @Aspect
 @Component
 public class HasPermessoAspect {
-
-    private final Logger logger = LoggerFactory.getLogger(HasPermessoAspect.class);
 
     private static final String ERROR_MESSAGE = "Access Denied";
 
@@ -34,6 +35,7 @@ public class HasPermessoAspect {
         Authentication credentials = SecurityContextHolder.getContext().getAuthentication();
 
         if (!credentials.getAuthorities().contains(requestedPermissionName)){
+            log.info("Denying request for missing permission: {}", requestedPermissionName.getAuthority());
             return rejectRequestWithForbiddenStatus();
         }
 
@@ -46,7 +48,7 @@ public class HasPermessoAspect {
         try {
             response.getOutputStream().write(ERROR_MESSAGE.getBytes());
         } catch(IOException e){
-            logger.error("could not obtain output stream", e);
+            log.error("Error occurred while obtaining output stream", e);
         }
         return null;
     }

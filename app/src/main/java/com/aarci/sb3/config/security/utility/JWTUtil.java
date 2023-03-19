@@ -13,6 +13,8 @@ public class JWTUtil {
     private static final long EXPIRE_DURATION = 3600000L;
     private static final String SECRET_KEY = "ThisIsSecretKey";
 
+    private static final String BEARER = "Bearer ";
+
     public static String generateAccessToken(Utente utente) {
 
         StringBuilder sb = new StringBuilder();
@@ -36,6 +38,11 @@ public class JWTUtil {
     }
 
     public static Claims getAllClaimsFromToken(String token) {
+
+        if (token.startsWith(BEARER)){
+            token = token.replaceFirst(BEARER, "");
+        }
+
         Claims claims;
         try {
             claims = Jwts.parser()

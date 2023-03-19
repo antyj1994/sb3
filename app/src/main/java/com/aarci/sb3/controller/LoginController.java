@@ -16,6 +16,10 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
+    public LoginController(LoginService loginService){
+        this.loginService = loginService;
+    }
+
     @PostMapping(path = "/login")
     public LoginDTO login(@RequestBody LoginCommand command){
         return this.loginService.login(command);

@@ -20,8 +20,12 @@ import java.util.List;
 
 @RestController
 public class PermessoController {
-    @Autowired
-    private PermessoService permessoService;
+
+    private final PermessoService permessoService;
+
+    public PermessoController(PermessoService permessoService){
+        this.permessoService = permessoService;
+    }
 
     @PostMapping(path = "/permesso")
     public PermessoDTO createPermesso(@RequestBody CreatePermessoCommand command){

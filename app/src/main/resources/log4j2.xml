@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN"
+               monitorInterval="30">
+    <Properties>
+        <Property name="LOG_DIR">./logs</Property>
+        <Property name="LOG_ARCHIVE_DIR">${LOG_DIR}/archive</Property>
+        <Property name="LOG_PATTERN">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="ConsoleAppender"
+                 target="SYSTEM_OUT"
+                 follow="true">
+            <PatternLayout pattern="%highlight{%-5level}Message%X{traceId}: %msg%n%throwable"/>
+        </Console>
+        <RollingFile name="FileAppender"
+                     fileName="${LOG_DIR}/sb3.log"
+                     filePattern="${LOG_ARCHIVE_DIR}/${date:yyyy-MM}/sb3.log.%d{yyyy-MM-dd}.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="error"
+              additivity="true">
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+        </Root>
+        <Logger name="org.hibernate.SQL"
+                level="error"
+                additivity="false">
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+        <Logger name="org.springframework"
+                level="error"
+                additivity="false">
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+        <Logger name="com.aarci.sb3"
+                level="info"
+                additivity="false">
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+    </Loggers>
+</Configuration>

@@ -43,12 +43,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private SecurityUser getUserDetails(String token) {
 
         SecurityUser securityUser = new SecurityUser();
+
         Claims claims = JWTUtil.getAllClaimsFromToken(token);
+
+        if (claims == null){
+            return securityUser;
+        }
+
         String subject = (String) claims.get(Claims.SUBJECT);
         String roles = (String) claims.get("roles");
 
         roles = roles.replace("[", "").replace("]", "");
-        String[] roleNames = roles.split(",");
+        String[] roleNames = roles.split(", ");
 
         for (String roleName : roleNames) {
             securityUser.getPermessi().add(new Permesso(roleName));
