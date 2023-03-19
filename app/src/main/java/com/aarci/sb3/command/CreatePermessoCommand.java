@@ -7,8 +7,6 @@ import lombok.Data;
 @Data
 public class CreatePermessoCommand {
 
-    private Integer id;
-
     private String nome;
 
     private String descrizione;

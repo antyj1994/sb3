@@ -1,3 +1,6 @@
+create sequence sb3.utente_sequence start 1 increment 1;
+create sequence sb3.permesso_sequence start 1 increment 1;
+
 create table sb3.utente(
     email varchar primary key,
     username varchar not null,

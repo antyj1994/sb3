@@ -3,6 +3,7 @@ package com.aarci.sb3.controller;
 import com.aarci.sb3.command.CreatePermessoCommand;
 import com.aarci.sb3.command.CreateUserCommand;
 import com.aarci.sb3.command.UpdateUserCommand;
+import com.aarci.sb3.dto.BaseDTO;
 import com.aarci.sb3.dto.PermessoDTO;
 import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.entity.Permesso;
@@ -28,8 +29,8 @@ public class PermessoController {
     }
 
     @GetMapping(path = "/permesso/{id}")
-    public Permesso getUtente(@PathVariable("id") Integer id){
-        return this.permessoService.getPermesso(id);
+    public Permesso getUtente(@PathVariable("nome") String nome){
+        return this.permessoService.getPermesso(nome);
     }
 
     @GetMapping(path = "/permesso")
@@ -50,6 +51,10 @@ public class PermessoController {
 
     @ExceptionHandler({ RuntimeException.class })
     public ResponseEntity<Object> handleException(Exception ex) {
+        BaseDTO baseDTO= new BaseDTO();
+        baseDTO.setBody(ex.getMessage());
+        baseDTO.setCode(HttpStatus.BAD_REQUEST.value());
+        baseDTO.setStatus("Error");
         return new ResponseEntity<Object>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

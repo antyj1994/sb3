@@ -6,8 +6,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-public class PermessoDTO {
-    private Integer id;
+public class PermessoDTO extends BaseDTO{
 
     private String nome;
 

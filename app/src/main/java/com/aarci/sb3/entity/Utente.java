@@ -14,7 +14,10 @@ import java.util.*;
 public class Utente {
 
     @Id
-    @Column(name="email")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "utente_generator")
+    @SequenceGenerator(name = "utente_generator", sequenceName = "utente_sequence", allocationSize = 1)
+    private Integer id;
+    @Column(name="email", unique = true)
     private String email;
 
     @Column(name="username")

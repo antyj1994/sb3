@@ -17,7 +17,6 @@ public class DTOConverter {
 
     public static PermessoDTO convertToDTO(Permesso permesso){
         PermessoDTO permessoDTO = new PermessoDTO();
-        permessoDTO.setId(permesso.getId());
         permessoDTO.setNome(permesso.getNome());
         permessoDTO.setDescrizione(permesso.getDescrizione());
         //permessoDTO.setUtenti(permesso.getUtenti());

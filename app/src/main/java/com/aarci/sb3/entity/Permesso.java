@@ -17,8 +17,10 @@ public class Permesso {
     }
     @Column(name = "id")
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permesso_generator")
+    @SequenceGenerator(name = "permesso_generator", sequenceName = "permesso_sequence", allocationSize = 1)
     private Integer id;
-    @Column(name = "nome")
+    @Column(name = "nome", unique = true)
     private String nome;
     @Column(name = "descrizione")
     private String descrizione;

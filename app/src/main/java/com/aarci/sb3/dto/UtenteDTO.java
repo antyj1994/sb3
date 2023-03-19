@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-public class UtenteDTO {
+public class UtenteDTO extends BaseDTO {
 
     private String email;
     private String username;
