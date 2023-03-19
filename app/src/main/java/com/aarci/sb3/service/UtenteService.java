@@ -28,7 +28,7 @@ public class UtenteService {
     private PermessoRepository permessoRepository;
 
     public Utente getUtente(String email){
-        Optional<Utente> utenteOptional = this.utenteRepository.findById(email);
+        Optional<Utente> utenteOptional = this.utenteRepository.findByEmail(email);
         if (utenteOptional.isEmpty()){
             throw new RuntimeException("L'utente cercato non esiste");
         }
@@ -40,7 +40,7 @@ public class UtenteService {
     }
 
     public List<PermessoDTO> getAllPermesso(String email){
-        Optional<Utente> utenteOptional = this.utenteRepository.findById(email);
+        Optional<Utente> utenteOptional = this.utenteRepository.findByEmail(email);
         if (utenteOptional.isEmpty()){
             throw new RuntimeException("User doesn't exists");
         }
@@ -95,12 +95,12 @@ public class UtenteService {
         return utente;
     }
 
-    public Utente aggiungiPermesso(String email,Integer id_permesso) {
-        Optional<Utente> aggiunto = this.utenteRepository.findById(email);
+    public Utente aggiungiPermesso(String email,String nome) {
+        Optional<Utente> aggiunto = this.utenteRepository.findByEmail(email);
         if (aggiunto.isEmpty()) {
             throw new RuntimeException("User doesn't exists");
         }
-        Optional<Permesso> permessoOptional = this.permessoRepository.findById(id_permesso);
+        Optional<Permesso> permessoOptional = this.permessoRepository.findByNome(nome);
         if (permessoOptional.isEmpty()) {
             throw new RuntimeException("Permission doesn't exists");
         }
@@ -110,18 +110,17 @@ public class UtenteService {
         utente.setPassword(aggiunto.get().getPassword());
         utente.setUsername(aggiunto.get().getPassword());
         utente.setPermessi(aggiunto.get().getPermessi());
-        Iterator<Permesso> iterator=utente.getPermessi().iterator();
-        while (iterator.hasNext()){
-            if(iterator.next().getId().equals(id_permesso)){
+        for (Permesso perTemp: utente.getPermessi()){
+            if(perTemp.getNome()== nome){
                 throw new RuntimeException("Permission already exists");
             }
         }
         utente.getPermessi().add(permesso);
         this.utenteRepository.save(utente);
-            return utente;
+        return utente;
     }
-    public Utente deletePermessoUtente(String email, Integer id_permesso){
-        Optional<Utente> aggiunto = this.utenteRepository.findById(email);
+    public Utente deletePermessoUtente(String email, String nome){
+        Optional<Utente> aggiunto = this.utenteRepository.findByEmail(email);
         if (aggiunto.isEmpty()) {
             throw new RuntimeException("User doesn't exists");
         }
@@ -132,7 +131,7 @@ public class UtenteService {
         utente.setPermessi(aggiunto.get().getPermessi());
         Iterator<Permesso> iterator=utente.getPermessi().iterator();
         while (iterator.hasNext()){
-            if(iterator.next().getId().equals(id_permesso)){
+            if(iterator.next().getNome().equals(nome)){
                 iterator.remove();
                 this.utenteRepository.save(utente);
                 return utente;

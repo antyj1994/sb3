@@ -43,8 +43,8 @@ public class PermessoService {
     public List<Permesso> getAll(){
         return this.permessoRepository.findAll();
     }
-    public Permesso delete(Integer id){
-        Optional<Permesso> eliminato= this.permessoRepository.findById(id);
+    public Permesso delete(String nome){
+        Optional<Permesso> eliminato= this.permessoRepository.findByNome(nome);
         if(eliminato.isEmpty()){
             throw new RuntimeException("Il permesso non esiste");
         }
@@ -53,22 +53,22 @@ public class PermessoService {
         return permesso;
     }
     public Permesso updatePermesso(UpdatePermessoCommand command){
-        Optional<Permesso> esistente = this.permessoRepository.findById(command.getOldId());
+        Optional<Permesso> esistente = this.permessoRepository.findByNome(command.getOldNome());
         if (esistente.isEmpty()){
             throw new RuntimeException("Il permesso non esiste");
         }
-        Optional<Permesso> nuovoIdEsistente = this.permessoRepository.findById(command.getNewId());
-        if (nuovoIdEsistente.isPresent() && nuovoIdEsistente.get().getNome()==command.getNome() && nuovoIdEsistente.get().getDescrizione()==command.getDescrizione()){
+        Optional<Permesso> nuovoNomeEsistente = this.permessoRepository.findByNome(command.getNewNome());
+        if (nuovoNomeEsistente.isPresent() && nuovoNomeEsistente.get().getDescrizione()==command.getDescrizione()){
             throw new RuntimeException("Il permesso gia' esiste");
         }
         Permesso permesso = esistente.get();
-        permesso.setId(command.getOldId());
-        permesso.setNome(command.getNome());
+        permesso.setId(esistente.get().getId());
+        permesso.setNome(command.getOldNome());
         permesso.setDescrizione(command.getDescrizione());
         Permesso permessoNew = new Permesso();
         permessoNew.setDescrizione(command.getDescrizione());
-        permessoNew.setId(command.getNewId());
-        permessoNew.setNome(command.getNome());
+        permessoNew.setId(esistente.get().getId());
+        permessoNew.setNome(command.getNewNome());
         this.permessoRepository.delete(permesso);
         this.permessoRepository.save(permessoNew);
         return permessoNew;

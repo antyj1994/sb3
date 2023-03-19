@@ -33,7 +33,7 @@ public class PermessoController {
     }
 
     @GetMapping(path = "/permesso/{id}")
-    public Permesso getUtente(@PathVariable("nome") String nome){
+    public Permesso getPermesso(@PathVariable("nome") String nome){
         return this.permessoService.getPermesso(nome);
     }
 
@@ -43,8 +43,8 @@ public class PermessoController {
     }
 
     @DeleteMapping(path = "/permesso/{id}")
-    public Permesso deletePermesso(@PathVariable("id") Integer id){
-        return this.permessoService.delete(id);
+    public Permesso deletePermesso(@PathVariable("nome") String nome){
+        return this.permessoService.delete(nome);
     }
 
     @PutMapping(path = "/permesso")

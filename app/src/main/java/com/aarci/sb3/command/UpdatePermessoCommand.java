@@ -4,8 +4,7 @@ import lombok.Data;
 
 @Data
 public class UpdatePermessoCommand {
-    private Integer oldId;
-    private Integer newId;
-    private String nome;
+    private String newNome;
+    private String oldNome;
     private String descrizione;
 }
