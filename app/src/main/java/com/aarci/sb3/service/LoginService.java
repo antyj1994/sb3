@@ -21,7 +21,8 @@ public class LoginService {
     private PasswordEncoder passwordEncoder;
 
     public LoginDTO login(LoginCommand command){
-        Optional<Utente> utenteOptional = this.utenteRepository.findById(command.getEmail());
+
+        Optional<Utente> utenteOptional = this.utenteRepository.findByEmail(command.getEmail());
         if (utenteOptional.isEmpty()){
             throw new RuntimeException("User doesn't exists");
         }

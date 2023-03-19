@@ -3,7 +3,7 @@ create sequence sb3.permesso_sequence start 1 increment 1;
 
 create table sb3.utente(
     id integer primary key,
-    email varchar not null,
+    email varchar unique not null,
     username varchar not null,
     password varchar not null
 );

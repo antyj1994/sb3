@@ -56,7 +56,7 @@ public class UtenteService {
         utente.setEmail(command.getEmail());
         utente.setUsername(command.getUsername());
         utente.setPassword(command.getPassword());
-        Optional<Utente> esistente = this.utenteRepository.findById(utente.getEmail());
+        Optional<Utente> esistente = this.utenteRepository.findByEmail(utente.getEmail());
         if (esistente.isPresent()){
             throw new RuntimeException("L'utente e' gia' esistente");
         }

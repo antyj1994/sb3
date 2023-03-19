@@ -10,6 +10,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,9 @@ public class HasPermessoAspect {
 
     private static final String ERROR_MESSAGE = "Access Denied";
 
+    @Value("${sb3.method-security.enabled}")
+    private boolean isMethodSecurityEnabled;
+
     @Autowired
     private HttpServletResponse response;
 
@@ -34,7 +38,7 @@ public class HasPermessoAspect {
 
         Authentication credentials = SecurityContextHolder.getContext().getAuthentication();
 
-        if (!credentials.getAuthorities().contains(requestedPermissionName)){
+        if (isMethodSecurityEnabled && !credentials.getAuthorities().contains(requestedPermissionName)){
             log.info("Denying request for missing permission: {}", requestedPermissionName.getAuthority());
             return rejectRequestWithForbiddenStatus();
         }

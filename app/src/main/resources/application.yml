@@ -12,3 +12,7 @@ server:
 logging:
   # Path to log4j2.xml
   config: ${LOGGING_CONFIG:classpath:log4j2.xml}
+
+sb3:
+  method-security:
+    enabled: false

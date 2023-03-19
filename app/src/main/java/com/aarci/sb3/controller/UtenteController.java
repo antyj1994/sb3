@@ -3,6 +3,7 @@ package com.aarci.sb3.controller;
 import com.aarci.sb3.config.security.aot.HasPermesso;
 import com.aarci.sb3.command.CreateUserCommand;
 import com.aarci.sb3.dto.PermessoDTO;
+import com.aarci.sb3.dto.ResponseWrapperDTO;
 import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.entity.Utente;
 import com.aarci.sb3.service.UtenteService;
@@ -25,16 +26,16 @@ public class UtenteController {
     }
 
     @PostMapping(path = "/utente")
-    //@HasPermesso("CREATE_USER")
-    public UtenteDTO createUtente(@RequestBody CreateUserCommand command){
+    @HasPermesso("CREATE_USER")
+    public ResponseWrapperDTO<UtenteDTO> createUtente(@RequestBody CreateUserCommand command){
         log.info("Start createUtente");
         UtenteDTO utenteDTO = this.utenteService.create(command);
         log.info("End createUtente");
-        return utenteDTO;
+        return new ResponseWrapperDTO<>(utenteDTO);
     }
 
     @GetMapping(path = "/utente/{email}")
-    //@HasPermesso("READ_USER")
+    @HasPermesso("READ_USER")
     public Utente getUtente(@PathVariable("email") String email){
         log.info("Start getUtente");
         Utente utenteDTO = this.utenteService.getUtente(email);
@@ -44,7 +45,7 @@ public class UtenteController {
 
 
     @GetMapping(path = "/utente")
-    //@HasPermesso("READ_USER")
+    @HasPermesso("READ_USER")
     public List<Utente> getAllUtenti(){
         log.info("Start getAllUtente");
         List<Utente> utentiDTO = this.utenteService.getAll();
@@ -53,7 +54,7 @@ public class UtenteController {
     }
 
     @PutMapping(path = "/utente")
-    //@HasPermesso("EDIT_USER")
+    @HasPermesso("EDIT_USER")
     public Utente updateUtente(@RequestBody UpdateUserCommand command){
         log.info("Start updateUtente");
         Utente utenteDTO = this.utenteService.update(command);
@@ -62,7 +63,7 @@ public class UtenteController {
     }
 
     @DeleteMapping(path = "/utente/{email}")
-    //@HasPermesso("DELETE_USER")
+    @HasPermesso("DELETE_USER")
     public Utente deleteUtente(@PathVariable("email") String email){
         log.info("Start deleteUtente");
         Utente utenteDTO = this.utenteService.delete(email);
@@ -71,7 +72,7 @@ public class UtenteController {
     }
 
     @PostMapping(path = "/{email}/{id_permesso}")
-    //@HasPermesso("EDIT_USER")
+    @HasPermesso("EDIT_USER")
     public Utente addPermessoAdUtente(@PathVariable("email") String email, @PathVariable("id_permesso") String nome ){
         log.info("Start deleteUtente");
         Utente utenteDTO = this.utenteService.aggiungiPermesso(email, nome);
@@ -80,7 +81,7 @@ public class UtenteController {
     }
 
     @GetMapping(path = "/{email}/permesso")
-    //@HasPermesso("READ_USER")
+    @HasPermesso("READ_USER")
     public List<PermessoDTO> getAllPermessiPerUtente(@PathVariable("email") String email){
         log.info("Start getAllPermessiPerUtente");
         List<PermessoDTO> permessiDTO = this.utenteService.getAllPermesso(email);
@@ -89,7 +90,7 @@ public class UtenteController {
     }
 
     @DeleteMapping(path = "/{email}/{id_permesso}")
-    //@HasPermesso("EDIT_USER")
+    @HasPermesso("EDIT_USER")
     public Utente deletePermessoDaUtente(@PathVariable("email") String email, @PathVariable("id_permesso") String nome){
         log.info("Start deletePermessoDaUtente");
         Utente utenteDTO = this.utenteService.deletePermessoUtente(email, nome);
