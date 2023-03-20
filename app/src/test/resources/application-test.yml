@@ -1,12 +1,28 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:sb3;DB_CLOSE_DELAY=-1;NON_KEYWORDS=KEY,VALUE
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
+    username: sa
+    password: password
     driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+      show-sql: true
 
 hibernate:
+  show-sql: true
   dialect: org.hibernate.dialect.H2Dialect
   hbm2ddl:
     auto: create
 
 server:
   port: 8080
+
+sb3:
+  method-security:
+    enabled: true
+  jwt:
+    expireDuration: 3600000
+    secretKey: 'hedfuiweuhuhixsmaksqije4utrwbgicoaxnqu'
+

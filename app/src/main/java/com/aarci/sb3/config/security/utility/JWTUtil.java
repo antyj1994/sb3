@@ -23,19 +23,22 @@ public class JWTUtil {
     public String generateAccessToken(Utente utente) {
 
         StringBuilder sb = new StringBuilder();
-        String claims;
-        sb.append("[");
-        for (Permesso p : utente.getPermessi()){
-            sb.append(p.getNome()).append(", ");
+        String roles = null;
+
+        if (!utente.getPermessi().isEmpty()) {
+            sb.append("[");
+            for (Permesso p : utente.getPermessi()) {
+                sb.append(p.getNome()).append(", ");
+            }
+            sb.delete(sb.lastIndexOf(","), sb.lastIndexOf(",") + 2);
+            sb.append("]");
+            roles = sb.toString();
         }
-        sb.delete(sb.lastIndexOf(","), sb.lastIndexOf(",")+2);
-        sb.append("]");
-        claims = sb.toString();
 
         return Jwts.builder()
                 .setSubject(String.format("%s", utente.getEmail()))
                 .setIssuer("SB3")
-                .claim("roles", claims)
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtConfigurationProperties.getExpireDuration()))
                 .signWith(SignatureAlgorithm.HS512, jwtConfigurationProperties.getSecretKey())

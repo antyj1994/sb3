@@ -71,7 +71,7 @@ public class UtenteController {
         return utenteDTO;
     }
 
-    @PostMapping(path = "/{email}/{id_permesso}")
+    @PostMapping(path = "utente/{email}/permesso/{id_permesso}")
     @HasPermesso("EDIT_USER")
     public Utente addPermessoAdUtente(@PathVariable("email") String email, @PathVariable("id_permesso") int permesso){
         log.info("Start deleteUtente");
@@ -80,7 +80,7 @@ public class UtenteController {
         return utenteDTO;
     }
 
-    @GetMapping(path = "/{email}/permesso")
+    @GetMapping(path = "utente/{email}/permesso")
     @HasPermesso("READ_USER")
     public List<PermessoDTO> getAllPermessiPerUtente(@PathVariable("email") String email){
         log.info("Start getAllPermessiPerUtente");
@@ -89,7 +89,7 @@ public class UtenteController {
         return permessiDTO;
     }
 
-    @DeleteMapping(path = "/{email}/{id_permesso}")
+    @DeleteMapping(path = "utente/{email}/permesso/{id_permesso}")
     @HasPermesso("EDIT_USER")
     public Utente deletePermessoDaUtente(@PathVariable("email") String email, @PathVariable("id_permesso") String nome){
         log.info("Start deletePermessoDaUtente");

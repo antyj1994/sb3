@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -54,8 +55,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return securityUser;
         }
 
-        String subject = (String) claims.get(Claims.SUBJECT);
         String roles = (String) claims.get("roles");
+
+        if (roles == null) {
+            return securityUser;
+        }
 
         roles = roles.replace("[", "").replace("]", "");
         String[] roleNames = roles.split(", ");
@@ -63,10 +67,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         for (String roleName : roleNames) {
             securityUser.getPermessi().add(new Permesso(roleName));
         }
-
-        String[] jwtSubject = subject.split(",");
-
-        securityUser.setUsername(jwtSubject[0]);
 
         return securityUser;
     }

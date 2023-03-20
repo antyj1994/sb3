@@ -30,8 +30,8 @@ public class LoginService {
             throw new RuntimeException("User doesn't exists");
         }
         Utente utente = utenteOptional.get();
-        if (!command.getPassword().equals(utente.getPassword())){ //TODO sostituire quando la psw sara' criptata nel db
-        //if (!passwordEncoder.matches(command.getPassword(), utente.getPassword())){
+
+        if (!passwordEncoder.matches(command.getPassword(), utente.getPassword())){
             throw new RuntimeException("Wrong password");
         }
 

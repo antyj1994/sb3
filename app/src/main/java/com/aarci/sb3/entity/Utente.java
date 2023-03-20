@@ -10,7 +10,8 @@ import java.util.*;
 
 @Entity
 @Table(name="utente")
-@Data
+@Getter
+@Setter
 public class Utente {
 
     @Id
@@ -26,7 +27,7 @@ public class Utente {
     @Column(name="password")
     private String password;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany
     @JoinTable(
             name = "permessoutente",
             joinColumns = @JoinColumn(name = "id_utente"),
