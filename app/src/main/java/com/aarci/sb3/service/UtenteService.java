@@ -10,6 +10,7 @@ import com.aarci.sb3.repository.PermessoRepository;
 import com.aarci.sb3.repository.UtenteRepository;
 import com.aarci.sb3.utility.DTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class UtenteService {
     private UtenteRepository utenteRepository;
     @Autowired
     private PermessoRepository permessoRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public Utente getUtente(String email){
         Optional<Utente> utenteOptional = this.utenteRepository.findByEmail(email);
@@ -60,6 +63,7 @@ public class UtenteService {
         if (esistente.isPresent()){
             throw new RuntimeException("L'utente e' gia' esistente");
         }
+        utente.setPassword(passwordEncoder.encode(utente.getPassword()));
         this.utenteRepository.save(utente);
         return DTOConverter.convertToDTO(utente);
     }
@@ -81,12 +85,13 @@ public class UtenteService {
         utenteNew.setPassword(command.getPassword());
         utenteNew.setEmail(command.getNewEmail());
         utenteNew.setUsername(command.getUsername());
+        utenteNew.setPassword(passwordEncoder.encode(utenteNew.getPassword()));
         this.utenteRepository.delete(utente);
         this.utenteRepository.save(utenteNew);
         return utenteNew;
     }
     public Utente delete(String email){
-        Optional<Utente> eliminato= this.utenteRepository.findById(email);
+        Optional<Utente> eliminato= this.utenteRepository.findByEmail(email);
         if(eliminato.isEmpty()){
             throw new RuntimeException("L'utente non esiste");
         }

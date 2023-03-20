@@ -32,8 +32,8 @@ public class PermessoService {
         this.permessoRepository.save(permesso);
         return DTOConverter.convertToDTO(permesso);
     }
-    public Permesso getPermesso(String nome){
-        Optional<Permesso> permessoOptional = this.permessoRepository.findByNome(nome);
+    public Permesso getPermesso(Integer id){
+        Optional<Permesso> permessoOptional = this.permessoRepository.findById(id);
         if (permessoOptional.isEmpty()){
             throw new RuntimeException("Permissions doesn't exists");
         }

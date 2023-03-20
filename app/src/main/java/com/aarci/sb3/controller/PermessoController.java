@@ -28,8 +28,8 @@ public class PermessoController {
     }
 
     @GetMapping(path = "/permesso/{id}")
-    public Permesso getPermesso(@PathVariable("nome") String nome){
-        return this.permessoService.getPermesso(nome);
+    public Permesso getPermesso(@PathVariable("id") Integer id){
+        return this.permessoService.getPermesso(id);
     }
 
     @GetMapping(path = "/permesso")

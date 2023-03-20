@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -25,11 +26,7 @@ public class Permesso {
     @Column(name = "descrizione")
     private String descrizione;
 
-    /*@ManyToMany
-    @JoinTable(
-            name = "permessoutente",
-            joinColumns = @JoinColumn(name="id_permesso"),
-            inverseJoinColumns = @JoinColumn(name = "email_utente"))
-    Set<Utente> utenti;*/
+    @ManyToMany(mappedBy = "permessi")
+    Set<Utente> utenti = new HashSet<>();
 
 }
