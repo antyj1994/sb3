@@ -95,12 +95,12 @@ public class UtenteService {
         return utente;
     }
 
-    public Utente aggiungiPermesso(String email,String nome) {
+    public Utente aggiungiPermesso(String email, int id) {
         Optional<Utente> aggiunto = this.utenteRepository.findByEmail(email);
         if (aggiunto.isEmpty()) {
             throw new RuntimeException("User doesn't exists");
         }
-        Optional<Permesso> permessoOptional = this.permessoRepository.findByNome(nome);
+        Optional<Permesso> permessoOptional = this.permessoRepository.findById(id);
         if (permessoOptional.isEmpty()) {
             throw new RuntimeException("Permission doesn't exists");
         }
@@ -111,7 +111,7 @@ public class UtenteService {
         utente.setUsername(aggiunto.get().getPassword());
         utente.setPermessi(aggiunto.get().getPermessi());
         for (Permesso perTemp: utente.getPermessi()){
-            if(perTemp.getNome()== nome){
+            if(perTemp.getId() == id){
                 throw new RuntimeException("Permission already exists");
             }
         }

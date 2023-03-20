@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -17,6 +18,9 @@ import java.io.IOException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private JWTUtil jwtUtil;
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -44,7 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         SecurityUser securityUser = new SecurityUser();
 
-        Claims claims = JWTUtil.getAllClaimsFromToken(token);
+        Claims claims = this.jwtUtil.getAllClaimsFromToken(token);
 
         if (claims == null){
             return securityUser;

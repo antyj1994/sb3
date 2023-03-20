@@ -18,6 +18,9 @@ public class LoginService {
     private UtenteRepository utenteRepository;
 
     @Autowired
+    private JWTUtil jwtUtil;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public LoginDTO login(LoginCommand command){
@@ -33,7 +36,7 @@ public class LoginService {
         }
 
         LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setToken(JWTUtil.generateAccessToken(utente));
+        loginDTO.setToken(this.jwtUtil.generateAccessToken(utente));
 
         return loginDTO;
     }

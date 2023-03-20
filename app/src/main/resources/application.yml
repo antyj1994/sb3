@@ -16,3 +16,6 @@ logging:
 sb3:
   method-security:
     enabled: false
+  jwt:
+    expireDuration: 3600000
+    secretKey: ThisIsSecretKey

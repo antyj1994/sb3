@@ -29,7 +29,7 @@ public class Utente {
     @ManyToMany
     @JoinTable(
             name = "permessoutente",
-            joinColumns = @JoinColumn(name="email_utente"),
+            joinColumns = @JoinColumn(name = "id_utente"),
             inverseJoinColumns = @JoinColumn(name = "id_permesso"))
     Set<Permesso> permessi = new HashSet<>();
 

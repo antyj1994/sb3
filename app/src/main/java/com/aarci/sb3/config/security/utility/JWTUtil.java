@@ -6,16 +6,21 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
 public class JWTUtil {
-    private static final long EXPIRE_DURATION = 3600000L;
-    private static final String SECRET_KEY = "ThisIsSecretKey";
+
+    @Autowired
+    private JWTConfigurationProperties jwtConfigurationProperties;
 
     private static final String BEARER = "Bearer ";
 
-    public static String generateAccessToken(Utente utente) {
+    public String generateAccessToken(Utente utente) {
 
         StringBuilder sb = new StringBuilder();
         String claims;
@@ -29,15 +34,15 @@ public class JWTUtil {
 
         return Jwts.builder()
                 .setSubject(String.format("%s", utente.getEmail()))
-                .setIssuer("CodeJava")
+                .setIssuer("SB3")
                 .claim("roles", claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfigurationProperties.getExpireDuration()))
+                .signWith(SignatureAlgorithm.HS512, jwtConfigurationProperties.getSecretKey())
                 .compact();
     }
 
-    public static Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
 
         if (token.startsWith(BEARER)){
             token = token.replaceFirst(BEARER, "");
@@ -46,7 +51,7 @@ public class JWTUtil {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
+                    .setSigningKey(jwtConfigurationProperties.getSecretKey())
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {

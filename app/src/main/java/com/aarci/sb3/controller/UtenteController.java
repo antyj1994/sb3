@@ -73,9 +73,9 @@ public class UtenteController {
 
     @PostMapping(path = "/{email}/{id_permesso}")
     @HasPermesso("EDIT_USER")
-    public Utente addPermessoAdUtente(@PathVariable("email") String email, @PathVariable("id_permesso") String nome ){
+    public Utente addPermessoAdUtente(@PathVariable("email") String email, @PathVariable("id_permesso") int permesso){
         log.info("Start deleteUtente");
-        Utente utenteDTO = this.utenteService.aggiungiPermesso(email, nome);
+        Utente utenteDTO = this.utenteService.aggiungiPermesso(email, permesso);
         log.info("End deleteUtente");
         return utenteDTO;
     }
