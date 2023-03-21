@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import com.aarci.sb3.command.UpdatePermessoCommand;
 
 import java.util.List;
-
 @RestController
 public class PermessoController {
 
