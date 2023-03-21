@@ -38,8 +38,8 @@ public class PermessoController {
     }
 
     @DeleteMapping(path = "/permesso/{id}")
-    public Permesso deletePermesso(@PathVariable("nome") String nome){
-        return this.permessoService.delete(nome);
+    public Permesso deletePermesso(@PathVariable("id") Integer id){
+        return this.permessoService.delete(id);
     }
 
     @PutMapping(path = "/permesso")

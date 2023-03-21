@@ -43,12 +43,16 @@ public class PermessoService {
     public List<Permesso> getAll(){
         return this.permessoRepository.findAll();
     }
-    public Permesso delete(String nome){
-        Optional<Permesso> eliminato= this.permessoRepository.findByNome(nome);
+    public Permesso delete(Integer id){
+        Optional<Permesso> eliminato= this.permessoRepository.findById(id);
         if(eliminato.isEmpty()){
             throw new RuntimeException("Il permesso non esiste");
         }
         Permesso permesso= eliminato.get();
+        for (Utente utente: permesso.getUtenti()){
+            utente.getPermessi().remove(permesso);
+        }
+        permesso.getUtenti().clear();
         this.permessoRepository.delete(permesso);
         return permesso;
     }

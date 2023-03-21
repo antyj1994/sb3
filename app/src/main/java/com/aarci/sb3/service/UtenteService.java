@@ -96,6 +96,10 @@ public class UtenteService {
             throw new RuntimeException("L'utente non esiste");
         }
         Utente utente= eliminato.get();
+        for (Permesso permesso:utente.getPermessi()){
+            permesso.getUtenti().remove(utente);
+        }
+        utente.getPermessi().clear();
         this.utenteRepository.delete(utente);
         return utente;
     }
@@ -124,7 +128,7 @@ public class UtenteService {
         this.utenteRepository.save(utente);
         return utente;
     }
-    public Utente deletePermessoUtente(String email, String nome){
+    public Utente deletePermessoUtente(String email, Integer id){
         Optional<Utente> aggiunto = this.utenteRepository.findByEmail(email);
         if (aggiunto.isEmpty()) {
             throw new RuntimeException("User doesn't exists");
@@ -136,7 +140,7 @@ public class UtenteService {
         utente.setPermessi(aggiunto.get().getPermessi());
         Iterator<Permesso> iterator=utente.getPermessi().iterator();
         while (iterator.hasNext()){
-            if(iterator.next().getNome().equals(nome)){
+            if(iterator.next().getId().equals(id)){
                 iterator.remove();
                 this.utenteRepository.save(utente);
                 return utente;

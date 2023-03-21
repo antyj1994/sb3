@@ -91,9 +91,9 @@ public class UtenteController {
 
     @DeleteMapping(path = "utente/{email}/permesso/{id_permesso}")
     @HasPermesso("EDIT_USER")
-    public Utente deletePermessoDaUtente(@PathVariable("email") String email, @PathVariable("id_permesso") String nome){
+    public Utente deletePermessoDaUtente(@PathVariable("email") String email, @PathVariable("id_permesso") Integer id){
         log.info("Start deletePermessoDaUtente");
-        Utente utenteDTO = this.utenteService.deletePermessoUtente(email, nome);
+        Utente utenteDTO = this.utenteService.deletePermessoUtente(email, id);
         log.info("End deletePermessoDaUtente");
         return utenteDTO;
     }
