@@ -21,3 +21,10 @@ create table sb3.permessoutente(
     constraint id_permesso_fkey foreign key (id_permesso) references sb3.permesso(id),
     primary key (id_utente, id_permesso)
 );
+create table sb5.item(
+    id bigint primary key,
+    name varchar not null,
+    description varchar not null,
+    enabled boolean not null,
+    price integer not null
+);

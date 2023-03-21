@@ -1,7 +1,9 @@
 package com.aarci.sb3.utility;
 
+import com.aarci.sb3.dto.ItemDTO;
 import com.aarci.sb3.dto.PermessoDTO;
 import com.aarci.sb3.dto.UtenteDTO;
+import com.aarci.sb3.entity.Item;
 import com.aarci.sb3.entity.Permesso;
 import com.aarci.sb3.entity.Utente;
 
@@ -21,5 +23,14 @@ public class DTOConverter {
         permessoDTO.setDescrizione(permesso.getDescrizione());
         //permessoDTO.setUtenti(permesso.getUtenti());
         return permessoDTO;
+    }
+
+    public static ItemDTO convertToDTO(Item item){
+        ItemDTO itemDTO=new ItemDTO();
+        itemDTO.setNome(item.getNome());
+        itemDTO.setDescription(item.getDescription());
+        itemDTO.setEnabled(item.isEnabled());
+        itemDTO.setPrice(item.getPrice());
+        return itemDTO;
     }
 }
