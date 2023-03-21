@@ -1,5 +1,6 @@
 package com.aarci.sb3.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -29,7 +30,8 @@ public class Permesso {
     @Column(name = "descrizione")
     private String descrizione;
 
-    @ManyToMany(mappedBy = "permessi")
+    @JsonIgnoreProperties("permessi")
+    @ManyToMany(mappedBy = "permessi", fetch = FetchType.LAZY)
     Set<Utente> utenti = new HashSet<>();
 
 }

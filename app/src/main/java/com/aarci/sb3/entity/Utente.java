@@ -1,5 +1,6 @@
 package com.aarci.sb3.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,11 +28,13 @@ public class Utente {
     @Column(name="password")
     private String password;
 
-    @ManyToMany
+    @JsonIgnoreProperties("utenti")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "permessoutente",
             joinColumns = @JoinColumn(name = "id_utente"),
             inverseJoinColumns = @JoinColumn(name = "id_permesso"))
     Set<Permesso> permessi = new HashSet<>();
+
 
 }

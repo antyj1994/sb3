@@ -113,7 +113,7 @@ public class UtenteService {
         Utente utente = aggiunto.get();
         utente.setEmail(aggiunto.get().getEmail());
         utente.setPassword(aggiunto.get().getPassword());
-        utente.setUsername(aggiunto.get().getPassword());
+        utente.setUsername(aggiunto.get().getUsername());
         utente.setPermessi(aggiunto.get().getPermessi());
         for (Permesso perTemp: utente.getPermessi()){
             if(perTemp.getId() == id){
