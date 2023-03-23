@@ -1,25 +1,17 @@
 package com.aarci.sb3.service;
 
 import com.aarci.sb3.command.CreatePermessoCommand;
-import com.aarci.sb3.command.CreateUserCommand;
 import com.aarci.sb3.command.UpdatePermessoCommand;
 import com.aarci.sb3.dto.PermessoDTO;
-import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.entity.Permesso;
 import com.aarci.sb3.entity.Utente;
 import com.aarci.sb3.repository.PermessoRepository;
 import com.aarci.sb3.utility.DTOConverter;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import static com.aarci.sb3.utility.DTOConverter.convertToDTO;
 
 @Service
 public class PermessoService {
