@@ -16,8 +16,7 @@ import org.springframework.test.context.event.annotation.BeforeTestExecution;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -134,6 +133,49 @@ public class UtenteTests extends Sb3ApplicationTests {
                         .content(new ObjectMapper().writeValueAsString(command)))
                 .andExpect(status().isForbidden());
     }
+
+    // DELETE USER
+
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithDeletePermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromPermessoutenteAndPermessoAndUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenExistingUserWithDeletePermissions_WhenDeleteExistingUser_ThenStatus200() throws Exception {
+        String email = "deleteme@user.com";
+
+        mvc.perform(delete("/utente/" + email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken))
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithDeletePermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromPermessoutenteAndPermessoAndUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenExistingUserWithDeletePermissions_WhenDeleteNonExistingUser_ThenStatus400() throws Exception {
+        String email = "dontdeleteme@user.com";
+
+        mvc.perform(delete("/utente/" + email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithoutPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromPermessoutenteAndPermessoAndUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenExistingUserWithoutDeletePermissions_WhenDeleteExistingUser_ThenStatus403() throws Exception {
+        String email = "deleteme@user.com";
+
+        mvc.perform(delete("/utente/" + email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken))
+                .andExpect(status().isForbidden());
+    }
+
+
+    // UPDATE USER
+
 
 
 }
