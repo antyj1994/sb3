@@ -1,6 +1,6 @@
 package com.aarci.sb3.command;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
 public class UpdateUserCommand {

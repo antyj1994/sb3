@@ -33,7 +33,7 @@ public class UtenteService {
     public Utente getUtente(String email){
         Optional<Utente> utenteOptional = this.utenteRepository.findByEmail(email);
         if (utenteOptional.isEmpty()){
-            throw new RuntimeException("L'utente cercato non esiste");
+            throw new RuntimeException("User doesn't exists");
         }
         return utenteOptional.get();
     }
@@ -69,26 +69,20 @@ public class UtenteService {
     }
 
     public Utente update(UpdateUserCommand command){
-        Optional<Utente> esistente = this.utenteRepository.findById(command.getOldEmail());
+        Optional<Utente> esistente = this.utenteRepository.findByEmail(command.getOldEmail());
         if (esistente.isEmpty()){
             throw new RuntimeException("L'utente non esiste");
         }
-        Optional<Utente> nuovaMailEsistente = this.utenteRepository.findById(command.getNewEmail());
+        Optional<Utente> nuovaMailEsistente = this.utenteRepository.findByEmail(command.getNewEmail());
         if (nuovaMailEsistente.isPresent()){
             throw new RuntimeException("La mail gia' esiste");
         }
         Utente utente = esistente.get();
-        utente.setEmail(command.getOldEmail());
+        utente.setEmail(command.getNewEmail());
         utente.setUsername(command.getUsername());
-        utente.setPassword(command.getPassword());
-        Utente utenteNew = new Utente();
-        utenteNew.setPassword(command.getPassword());
-        utenteNew.setEmail(command.getNewEmail());
-        utenteNew.setUsername(command.getUsername());
-        utenteNew.setPassword(passwordEncoder.encode(utenteNew.getPassword()));
-        this.utenteRepository.delete(utente);
-        this.utenteRepository.save(utenteNew);
-        return utenteNew;
+        utente.setPassword(passwordEncoder.encode(command.getPassword()));
+        this.utenteRepository.save(utente);
+        return utente;
     }
     public Utente delete(String email){
         Optional<Utente> eliminato= this.utenteRepository.findByEmail(email);

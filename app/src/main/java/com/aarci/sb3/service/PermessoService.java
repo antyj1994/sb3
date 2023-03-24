@@ -3,6 +3,7 @@ package com.aarci.sb3.service;
 import com.aarci.sb3.command.CreatePermessoCommand;
 import com.aarci.sb3.command.UpdatePermessoCommand;
 import com.aarci.sb3.dto.PermessoDTO;
+import com.aarci.sb3.dto.ResponseWrapperDTO;
 import com.aarci.sb3.entity.Permesso;
 import com.aarci.sb3.entity.Utente;
 import com.aarci.sb3.repository.PermessoRepository;
@@ -24,12 +25,12 @@ public class PermessoService {
         this.permessoRepository.save(permesso);
         return DTOConverter.convertToDTO(permesso);
     }
-    public Permesso getPermesso(Integer id){
+    public PermessoDTO getPermesso(Integer id){
         Optional<Permesso> permessoOptional = this.permessoRepository.findById(id);
         if (permessoOptional.isEmpty()){
             throw new RuntimeException("Permissions doesn't exists");
         }
-        return permessoOptional.get();
+        return DTOConverter.convertToDTO(permessoOptional.get());
     }
 
     public List<Permesso> getAll(){

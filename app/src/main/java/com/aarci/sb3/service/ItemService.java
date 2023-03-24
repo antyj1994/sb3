@@ -26,4 +26,14 @@ public class ItemService {
         return DTOConverter.convertToDTO(item);
     }
 
+    /*public Item getItem(String nome);{
+        Optional<Item> itemOptional=this.itemRepository.findByNome(nome);
+        if (itemOptional.isEmpty()){
+            throw new RuntimeException("Item doesn't exists");
+        }
+        return itemOptional.get();
+    }*/
+
+
+
 }

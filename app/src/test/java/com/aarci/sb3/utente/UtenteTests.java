@@ -3,6 +3,7 @@ package com.aarci.sb3.utente;
 import com.aarci.sb3.Sb3ApplicationTests;
 import com.aarci.sb3.command.CreateUserCommand;
 import com.aarci.sb3.command.LoginCommand;
+import com.aarci.sb3.command.UpdateUserCommand;
 import com.aarci.sb3.login.LoginTests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
@@ -177,5 +178,72 @@ public class UtenteTests extends Sb3ApplicationTests {
     // UPDATE USER
 
 
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithEditPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromPermessoutenteAndPermessoAndUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenExistingUserWithUpdatePermissions_WhenUpdateExistingUser_ThenStatus200() throws Exception {
+        UpdateUserCommand updateUserCommand= new UpdateUserCommand();
+        updateUserCommand.setOldEmail("user@user.com");
+        updateUserCommand.setNewEmail("newuser@user.com");
+        updateUserCommand.setUsername("user");
+        updateUserCommand.setPassword("user");
+
+        mvc.perform(put("/utente")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken)
+                        .content(new ObjectMapper().writeValueAsString(updateUserCommand)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithoutPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenExistingUserWithoutPermissions_WhenUpdateExistingUser_ThenStatus403() throws Exception {
+        UpdateUserCommand updateUserCommand= new UpdateUserCommand();
+        updateUserCommand.setOldEmail("user@user.com");
+        updateUserCommand.setNewEmail("newuser@user.com");
+        updateUserCommand.setUsername("user");
+        updateUserCommand.setPassword("user");
+
+        mvc.perform(put("/utente")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken)
+                        .content(new ObjectMapper().writeValueAsString(updateUserCommand)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithEditPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromPermessoutenteAndPermessoAndUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenExistingUserWithUpdatePermissions_WhenUpdateNonExistingUser_ThenStatus400() throws Exception {
+        UpdateUserCommand updateUserCommand= new UpdateUserCommand();
+        updateUserCommand.setOldEmail("nonuser@user.com");
+        updateUserCommand.setNewEmail("newuser@user.com");
+        updateUserCommand.setUsername("user");
+        updateUserCommand.setPassword("user");
+
+        mvc.perform(put("/utente")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken)
+                        .content(new ObjectMapper().writeValueAsString(updateUserCommand)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingMultipleUsersWithEditPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromPermessoutenteAndPermessoAndUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenExistingUserWithUpdatePermissions_WhenUpdateExistingUserWithAlreadyExistingEmail_ThenStatus400() throws Exception {
+        UpdateUserCommand updateUserCommand= new UpdateUserCommand();
+        updateUserCommand.setOldEmail("user@user.com");
+        updateUserCommand.setNewEmail("anotheruser@user.com");
+        updateUserCommand.setUsername("user");
+        updateUserCommand.setPassword("user");
+
+        mvc.perform(put("/utente")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken)
+                        .content(new ObjectMapper().writeValueAsString(updateUserCommand)))
+                .andExpect(status().isBadRequest());
+    }
 
 }

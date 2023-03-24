@@ -27,8 +27,9 @@ public class PermessoController {
     }
 
     @GetMapping(path = "/permesso/{id}")
-    public Permesso getPermesso(@PathVariable("id") Integer id){
-        return this.permessoService.getPermesso(id);
+    public ResponseWrapperDTO<PermessoDTO> getPermesso(@PathVariable("id") Integer id){
+        PermessoDTO permessoDTO=this.permessoService.getPermesso(id);
+        return new ResponseWrapperDTO<>(permessoDTO);
     }
 
     @GetMapping(path = "/permesso")
@@ -49,7 +50,6 @@ public class PermessoController {
     @ExceptionHandler({ RuntimeException.class })
     public ResponseWrapperDTO<BaseDTO> handleException(Exception ex) {
         ResponseWrapperDTO<BaseDTO> responseWrapperDTO = new ResponseWrapperDTO<>();
-        responseWrapperDTO.setBody(new BaseDTO());
         responseWrapperDTO.setCode(HttpStatus.BAD_REQUEST.value());
         responseWrapperDTO.setStatus("Error");
         responseWrapperDTO.setMessage(ex.getMessage());
