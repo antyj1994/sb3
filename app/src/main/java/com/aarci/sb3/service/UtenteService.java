@@ -2,6 +2,7 @@ package com.aarci.sb3.service;
 
 import com.aarci.sb3.command.CreateUserCommand;
 import com.aarci.sb3.dto.PermessoDTO;
+import com.aarci.sb3.dto.ResponseWrapperDTO;
 import com.aarci.sb3.dto.UtenteDTO;
 import com.aarci.sb3.command.UpdateUserCommand;
 import com.aarci.sb3.entity.Permesso;
@@ -30,28 +31,35 @@ public class UtenteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Utente getUtente(String email){
+    public UtenteDTO getUtente(String email){
         Optional<Utente> utenteOptional = this.utenteRepository.findByEmail(email);
         if (utenteOptional.isEmpty()){
             throw new RuntimeException("User doesn't exists");
         }
-        return utenteOptional.get();
+        return DTOConverter.convertToDTO(utenteOptional.get());
     }
 
-    public List<Utente> getAll(){
-        return this.utenteRepository.findAll();
+    public List<ResponseWrapperDTO> getAll(){
+        List<Utente> utenti = this.utenteRepository.findAll();
+        List<ResponseWrapperDTO> response= new ArrayList<>();
+        for(Utente utente : utenti){
+            ResponseWrapperDTO responseWrapperDTO = new ResponseWrapperDTO<>(DTOConverter.convertToDTO(utente));
+            response.add(responseWrapperDTO);
+        }
+        return response;
     }
 
-    public List<PermessoDTO> getAllPermesso(String email){
+    public List<ResponseWrapperDTO> getAllPermesso(String email){
         Optional<Utente> utenteOptional = this.utenteRepository.findByEmail(email);
         if (utenteOptional.isEmpty()){
             throw new RuntimeException("User doesn't exists");
         }
-        List<PermessoDTO> permessi = new ArrayList<>();
+        List<ResponseWrapperDTO> responseWrapperDTOList = new ArrayList<>();
         for(Permesso permesso: utenteOptional.get().getPermessi()){
-            permessi.add(DTOConverter.convertToDTO(permesso));
+            ResponseWrapperDTO responseWrapperDTO = new ResponseWrapperDTO<>(DTOConverter.convertToDTO(permesso));
+            responseWrapperDTOList.add(responseWrapperDTO);
         }
-        return permessi;
+        return responseWrapperDTOList;
     }
 
     public UtenteDTO create(CreateUserCommand command){
@@ -68,7 +76,7 @@ public class UtenteService {
         return DTOConverter.convertToDTO(utente);
     }
 
-    public Utente update(UpdateUserCommand command){
+    public UtenteDTO update(UpdateUserCommand command){
         Optional<Utente> esistente = this.utenteRepository.findByEmail(command.getOldEmail());
         if (esistente.isEmpty()){
             throw new RuntimeException("L'utente non esiste");
@@ -82,9 +90,9 @@ public class UtenteService {
         utente.setUsername(command.getUsername());
         utente.setPassword(passwordEncoder.encode(command.getPassword()));
         this.utenteRepository.save(utente);
-        return utente;
+        return DTOConverter.convertToDTO(utente);
     }
-    public Utente delete(String email){
+    public UtenteDTO delete(String email){
         Optional<Utente> eliminato= this.utenteRepository.findByEmail(email);
         if(eliminato.isEmpty()){
             throw new RuntimeException("L'utente non esiste");
@@ -95,10 +103,10 @@ public class UtenteService {
         }
         utente.getPermessi().clear();
         this.utenteRepository.delete(utente);
-        return utente;
+        return DTOConverter.convertToDTO(utente);
     }
 
-    public Utente aggiungiPermesso(String email, int id) {
+    public UtenteDTO aggiungiPermesso(String email, int id) {
         Optional<Utente> aggiunto = this.utenteRepository.findByEmail(email);
         if (aggiunto.isEmpty()) {
             throw new RuntimeException("User doesn't exists");
@@ -120,9 +128,9 @@ public class UtenteService {
         }
         utente.getPermessi().add(permesso);
         this.utenteRepository.save(utente);
-        return utente;
+        return DTOConverter.convertToDTO(utente);
     }
-    public Utente deletePermessoUtente(String email, Integer id){
+    public UtenteDTO deletePermessoUtente(String email, Integer id){
         Optional<Utente> aggiunto = this.utenteRepository.findByEmail(email);
         if (aggiunto.isEmpty()) {
             throw new RuntimeException("User doesn't exists");
@@ -137,7 +145,7 @@ public class UtenteService {
             if(iterator.next().getId().equals(id)){
                 iterator.remove();
                 this.utenteRepository.save(utente);
-                return utente;
+                return DTOConverter.convertToDTO(utente);
             }
         }
         throw new RuntimeException("Permission doesn't exists");

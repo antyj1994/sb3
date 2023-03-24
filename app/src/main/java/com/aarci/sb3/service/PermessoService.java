@@ -10,6 +10,8 @@ import com.aarci.sb3.repository.PermessoRepository;
 import com.aarci.sb3.utility.DTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +35,16 @@ public class PermessoService {
         return DTOConverter.convertToDTO(permessoOptional.get());
     }
 
-    public List<Permesso> getAll(){
-        return this.permessoRepository.findAll();
+    public List<ResponseWrapperDTO> getAll(){
+        List<Permesso> permessi = this.permessoRepository.findAll();
+        List<ResponseWrapperDTO> response= new ArrayList<>();
+        for(Permesso permesso : permessi){
+            ResponseWrapperDTO responseWrapperDTO = new ResponseWrapperDTO<>(DTOConverter.convertToDTO(permesso));
+            response.add(responseWrapperDTO);
+        }
+        return response;
     }
-    public Permesso delete(Integer id){
+    public PermessoDTO delete(Integer id){
         Optional<Permesso> eliminato= this.permessoRepository.findById(id);
         if(eliminato.isEmpty()){
             throw new RuntimeException("Il permesso non esiste");
@@ -47,9 +55,9 @@ public class PermessoService {
         }
         permesso.getUtenti().clear();
         this.permessoRepository.delete(permesso);
-        return permesso;
+        return DTOConverter.convertToDTO(permesso);
     }
-    public Permesso updatePermesso(UpdatePermessoCommand command){
+    public PermessoDTO updatePermesso(UpdatePermessoCommand command){
         Optional<Permesso> esistente = this.permessoRepository.findByNome(command.getOldNome());
         if (esistente.isEmpty()){
             throw new RuntimeException("Il permesso non esiste");
@@ -59,15 +67,9 @@ public class PermessoService {
             throw new RuntimeException("Il permesso gia' esiste");
         }
         Permesso permesso = esistente.get();
-        permesso.setId(esistente.get().getId());
-        permesso.setNome(command.getOldNome());
         permesso.setDescrizione(command.getDescrizione());
-        Permesso permessoNew = new Permesso();
-        permessoNew.setDescrizione(command.getDescrizione());
-        permessoNew.setId(esistente.get().getId());
-        permessoNew.setNome(command.getNewNome());
-        this.permessoRepository.delete(permesso);
-        this.permessoRepository.save(permessoNew);
-        return permessoNew;
+        permesso.setNome(command.getNewNome());
+        this.permessoRepository.save(permesso);
+        return DTOConverter.convertToDTO(permesso);
     }
 }

@@ -2,6 +2,7 @@ package com.aarci.sb3.controller;
 
 import com.aarci.sb3.config.security.aot.HasPermesso;
 import com.aarci.sb3.command.CreateUserCommand;
+import com.aarci.sb3.dto.BaseDTO;
 import com.aarci.sb3.dto.PermessoDTO;
 import com.aarci.sb3.dto.ResponseWrapperDTO;
 import com.aarci.sb3.dto.UtenteDTO;
@@ -36,71 +37,75 @@ public class UtenteController {
 
     @GetMapping(path = "/utente/{email}")
     @HasPermesso("READ_USER")
-    public Utente getUtente(@PathVariable("email") String email){
+    public ResponseWrapperDTO<UtenteDTO> getUtente(@PathVariable("email") String email){
         log.info("Start getUtente");
-        Utente utenteDTO = this.utenteService.getUtente(email);
+        UtenteDTO utenteDTO = this.utenteService.getUtente(email);
         log.info("End getUtente");
-        return utenteDTO;
+        return new ResponseWrapperDTO<>();
     }
 
 
     @GetMapping(path = "/utente")
     @HasPermesso("READ_USER")
-    public List<Utente> getAllUtenti(){
+    public List<ResponseWrapperDTO> getAllUtenti(){
         log.info("Start getAllUtente");
-        List<Utente> utentiDTO = this.utenteService.getAll();
+        List<ResponseWrapperDTO> utentiDTO = this.utenteService.getAll();
         log.info("End getAllUtente");
         return utentiDTO;
     }
 
     @PutMapping(path = "/utente")
     @HasPermesso("EDIT_USER")
-    public Utente updateUtente(@RequestBody UpdateUserCommand command){
+    public ResponseWrapperDTO<UtenteDTO> updateUtente(@RequestBody UpdateUserCommand command){
         log.info("Start updateUtente");
-        Utente utenteDTO = this.utenteService.update(command);
+        UtenteDTO utenteDTO = this.utenteService.update(command);
         log.info("End updateUtente");
-        return utenteDTO;
+        return new ResponseWrapperDTO<>(utenteDTO);
     }
 
     @DeleteMapping(path = "/utente/{email}")
     @HasPermesso("DELETE_USER")
-    public Utente deleteUtente(@PathVariable("email") String email){
+    public ResponseWrapperDTO<UtenteDTO> deleteUtente(@PathVariable("email") String email){
         log.info("Start deleteUtente");
-        Utente utenteDTO = this.utenteService.delete(email);
+        UtenteDTO utenteDTO = this.utenteService.delete(email);
         log.info("End deleteUtente");
-        return utenteDTO;
+        return new ResponseWrapperDTO<>(utenteDTO);
     }
 
     @PostMapping(path = "utente/{email}/permesso/{id_permesso}")
     @HasPermesso("EDIT_USER")
-    public Utente addPermessoAdUtente(@PathVariable("email") String email, @PathVariable("id_permesso") int permesso){
+    public ResponseWrapperDTO<UtenteDTO> addPermessoAdUtente(@PathVariable("email") String email, @PathVariable("id_permesso") int permesso){
         log.info("Start deleteUtente");
-        Utente utenteDTO = this.utenteService.aggiungiPermesso(email, permesso);
+        UtenteDTO utenteDTO = this.utenteService.aggiungiPermesso(email, permesso);
         log.info("End deleteUtente");
-        return utenteDTO;
+        return new ResponseWrapperDTO<>(utenteDTO);
     }
 
     @GetMapping(path = "utente/{email}/permesso")
     @HasPermesso("READ_USER")
-    public List<PermessoDTO> getAllPermessiPerUtente(@PathVariable("email") String email){
+    public List<ResponseWrapperDTO> getAllPermessiPerUtente(@PathVariable("email") String email){
         log.info("Start getAllPermessiPerUtente");
-        List<PermessoDTO> permessiDTO = this.utenteService.getAllPermesso(email);
+        List<ResponseWrapperDTO> responseWrapperDTOList = this.utenteService.getAllPermesso(email);
         log.info("End getAllPermessiPerUtente");
-        return permessiDTO;
+        return responseWrapperDTOList;
     }
 
     @DeleteMapping(path = "utente/{email}/permesso/{id_permesso}")
     @HasPermesso("EDIT_USER")
-    public Utente deletePermessoDaUtente(@PathVariable("email") String email, @PathVariable("id_permesso") Integer id){
+    public ResponseWrapperDTO<UtenteDTO> deletePermessoDaUtente(@PathVariable("email") String email, @PathVariable("id_permesso") Integer id){
         log.info("Start deletePermessoDaUtente");
-        Utente utenteDTO = this.utenteService.deletePermessoUtente(email, id);
+        UtenteDTO utenteDTO = this.utenteService.deletePermessoUtente(email, id);
         log.info("End deletePermessoDaUtente");
-        return utenteDTO;
+        return new ResponseWrapperDTO<>(utenteDTO);
     }
 
     @ExceptionHandler({ RuntimeException.class })
-    public ResponseEntity<Object> handleRuntimeException(Exception ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseWrapperDTO<BaseDTO> handleException(Exception ex) {
+        ResponseWrapperDTO<BaseDTO> responseWrapperDTO = new ResponseWrapperDTO<>();
+        responseWrapperDTO.setCode(HttpStatus.BAD_REQUEST.value());
+        responseWrapperDTO.setStatus("Error");
+        responseWrapperDTO.setMessage(ex.getMessage());
+        return responseWrapperDTO;
     }
 
 }

@@ -4,10 +4,8 @@ import com.aarci.sb3.command.CreatePermessoCommand;
 import com.aarci.sb3.dto.BaseDTO;
 import com.aarci.sb3.dto.ResponseWrapperDTO;
 import com.aarci.sb3.dto.PermessoDTO;
-import com.aarci.sb3.entity.Permesso;
 import com.aarci.sb3.service.PermessoService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.aarci.sb3.command.UpdatePermessoCommand;
 
@@ -22,8 +20,8 @@ public class PermessoController {
     }
 
     @PostMapping(path = "/permesso")
-    public PermessoDTO createPermesso(@RequestBody CreatePermessoCommand command){
-        return this.permessoService.create(command);
+    public ResponseWrapperDTO<PermessoDTO> createPermesso(@RequestBody CreatePermessoCommand command){
+        return new ResponseWrapperDTO<>(this.permessoService.create(command));
     }
 
     @GetMapping(path = "/permesso/{id}")
@@ -33,18 +31,21 @@ public class PermessoController {
     }
 
     @GetMapping(path = "/permesso")
-    public List<Permesso> getAll(){
-        return this.permessoService.getAll();
+    public List<ResponseWrapperDTO> getAll(){
+        List<ResponseWrapperDTO> permessiDTO = this.permessoService.getAll();
+        return permessiDTO;
     }
 
     @DeleteMapping(path = "/permesso/{id}")
-    public Permesso deletePermesso(@PathVariable("id") Integer id){
-        return this.permessoService.delete(id);
+    public ResponseWrapperDTO<PermessoDTO> deletePermesso(@PathVariable("id") Integer id){
+        PermessoDTO permessoDTO = this.permessoService.delete(id);
+        return new ResponseWrapperDTO<>(permessoDTO);
     }
 
     @PutMapping(path = "/permesso")
-    public Permesso updatePermesso(@RequestBody UpdatePermessoCommand command){
-        return this.permessoService.updatePermesso(command);
+    public ResponseWrapperDTO<PermessoDTO> updatePermesso(@RequestBody UpdatePermessoCommand command){
+        PermessoDTO permessoDTO = this.permessoService.updatePermesso(command);
+        return new ResponseWrapperDTO<>(permessoDTO);
     }
 
     @ExceptionHandler({ RuntimeException.class })
