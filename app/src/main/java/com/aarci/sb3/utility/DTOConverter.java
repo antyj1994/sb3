@@ -27,7 +27,7 @@ public class DTOConverter {
 
     public static ItemDTO convertToDTO(Item item){
         ItemDTO itemDTO=new ItemDTO();
-        itemDTO.setNome(item.getNome());
+        itemDTO.setName(item.getName());
         itemDTO.setDescription(item.getDescription());
         itemDTO.setEnabled(item.isEnabled());
         itemDTO.setPrice(item.getPrice());

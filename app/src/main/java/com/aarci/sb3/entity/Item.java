@@ -16,7 +16,7 @@ public class Item {
     @Column(name = "id", unique = true)
     private long id;
     @Column(name = "name", unique = true)
-    private String nome;
+    private String name;
     @Column(name = "description", unique = true)
     private String description;
     @Column(name = "enabled", unique = true)

@@ -47,7 +47,7 @@ public class PermessoService {
     public PermessoDTO delete(Integer id){
         Optional<Permesso> eliminato= this.permessoRepository.findById(id);
         if(eliminato.isEmpty()){
-            throw new RuntimeException("Il permesso non esiste");
+            throw new RuntimeException("Permission doesn't exists");
         }
         Permesso permesso= eliminato.get();
         for (Utente utente: permesso.getUtenti()){
@@ -60,11 +60,11 @@ public class PermessoService {
     public PermessoDTO updatePermesso(UpdatePermessoCommand command){
         Optional<Permesso> esistente = this.permessoRepository.findByNome(command.getOldNome());
         if (esistente.isEmpty()){
-            throw new RuntimeException("Il permesso non esiste");
+            throw new RuntimeException("Permission doesn't exists");
         }
         Optional<Permesso> nuovoNomeEsistente = this.permessoRepository.findByNome(command.getNewNome());
         if (nuovoNomeEsistente.isPresent() && nuovoNomeEsistente.get().getDescrizione()==command.getDescrizione()){
-            throw new RuntimeException("Il permesso gia' esiste");
+            throw new RuntimeException("Permission already exists");
         }
         Permesso permesso = esistente.get();
         permesso.setDescrizione(command.getDescrizione());
