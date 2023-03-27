@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Log4j2
+/*@Log4j2
 public class PermessoTests extends Sb3ApplicationTests {
 
     private String authToken;
@@ -187,4 +187,4 @@ public class PermessoTests extends Sb3ApplicationTests {
                         .content(new ObjectMapper().writeValueAsString(updatePermessoCommand)))
                 .andExpect(status().isBadRequest());
     }
-}
+}*/

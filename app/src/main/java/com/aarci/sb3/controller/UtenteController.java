@@ -100,12 +100,12 @@ public class UtenteController {
     }
 
     @ExceptionHandler({ RuntimeException.class })
-    public ResponseWrapperDTO<BaseDTO> handleException(Exception ex) {
+    public ResponseEntity<ResponseWrapperDTO<BaseDTO>> handleException(Exception ex) {
         ResponseWrapperDTO<BaseDTO> responseWrapperDTO = new ResponseWrapperDTO<>();
         responseWrapperDTO.setCode(HttpStatus.BAD_REQUEST.value());
         responseWrapperDTO.setStatus("Error");
         responseWrapperDTO.setMessage(ex.getMessage());
-        return responseWrapperDTO;
+        return ResponseEntity.badRequest().body(responseWrapperDTO);
     }
 
 }

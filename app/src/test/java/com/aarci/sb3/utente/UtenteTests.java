@@ -44,8 +44,7 @@ public class UtenteTests extends Sb3ApplicationTests {
                 .andReturn();
 
         JSONObject responseJson = new JSONObject(result.getResponse().getContentAsString());
-        String sb= responseJson.get("body").toString();
-        this.authToken = (String) sb.subSequence(11, sb.length()-2);
+        this.authToken = responseJson.getJSONObject("body").getString("token");
     }
 
     // GET USER
