@@ -1,5 +1,6 @@
 create sequence sb3.utente_sequence start 1 increment 1;
 create sequence sb3.permesso_sequence start 1 increment 1;
+create sequence sb5.item_sequence start 1 increment 1;
 
 create table sb3.utente(
     id integer primary key,

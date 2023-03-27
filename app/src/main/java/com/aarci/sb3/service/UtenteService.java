@@ -36,6 +36,7 @@ public class UtenteService {
         if (utenteOptional.isEmpty()){
             throw new RuntimeException("User doesn't exists");
         }
+        utenteOptional.get().setPassword(passwordEncoder.encode(utenteOptional.get().getPassword()));
         return DTOConverter.convertToDTO(utenteOptional.get());
     }
 

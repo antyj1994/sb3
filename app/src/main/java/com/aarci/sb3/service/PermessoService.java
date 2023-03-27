@@ -2,6 +2,7 @@ package com.aarci.sb3.service;
 
 import com.aarci.sb3.command.CreatePermessoCommand;
 import com.aarci.sb3.command.UpdatePermessoCommand;
+import com.aarci.sb3.config.security.aot.HasPermesso;
 import com.aarci.sb3.dto.PermessoDTO;
 import com.aarci.sb3.dto.ResponseWrapperDTO;
 import com.aarci.sb3.entity.Permesso;
@@ -9,6 +10,7 @@ import com.aarci.sb3.entity.Utente;
 import com.aarci.sb3.repository.PermessoRepository;
 import com.aarci.sb3.utility.DTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,9 +26,14 @@ public class PermessoService {
         Permesso permesso = new Permesso();
         permesso.setNome(command.getNome());
         permesso.setDescrizione(command.getDescrizione());
+        Optional<Permesso> esistente = this.permessoRepository.findByNome(permesso.getNome());
+        if (esistente.isPresent()){
+            throw new RuntimeException("Permission already exists");
+        }
         this.permessoRepository.save(permesso);
         return DTOConverter.convertToDTO(permesso);
     }
+
     public PermessoDTO getPermesso(Integer id){
         Optional<Permesso> permessoOptional = this.permessoRepository.findById(id);
         if (permessoOptional.isEmpty()){
@@ -57,13 +64,14 @@ public class PermessoService {
         this.permessoRepository.delete(permesso);
         return DTOConverter.convertToDTO(permesso);
     }
+
     public PermessoDTO updatePermesso(UpdatePermessoCommand command){
         Optional<Permesso> esistente = this.permessoRepository.findByNome(command.getOldNome());
         if (esistente.isEmpty()){
             throw new RuntimeException("Permission doesn't exists");
         }
         Optional<Permesso> nuovoNomeEsistente = this.permessoRepository.findByNome(command.getNewNome());
-        if (nuovoNomeEsistente.isPresent() && nuovoNomeEsistente.get().getDescrizione()==command.getDescrizione()){
+        if (nuovoNomeEsistente.isPresent()){
             throw new RuntimeException("Permission already exists");
         }
         Permesso permesso = esistente.get();

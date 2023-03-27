@@ -34,5 +34,17 @@
         </rollback>
     </changeSet>
 
+    <changeSet author="aarci" id="sb3-1-initial_data" logicalFilePath="sb3" labels="0.0.1">
+        <sql>
+            INSERT INTO sb3.permesso (id, nome, descrizione) VALUES (0, 'CREATE', 'Let`s you create');
+            INSERT INTO sb3.permesso (id, nome, descrizione) VALUES (1, 'READ', 'Let`s you read');
+            INSERT INTO sb3.permesso (id, nome, descrizione) VALUES (2, 'EDIT', 'Let`s you edit');
+            INSERT INTO sb3.permesso (id, nome, descrizione) VALUES (3, 'DELETE', 'Let`s you delete');
+            INSERT INTO sb3.utente (id, email, username, password) VALUES (0, 'admin@admin.com', 'admin', '$2a$15$O4qn2yGJuNZGPr.k15X6Peir6uBQtLWrhFvQDyOOsdCFqCtl9fZbS');
+            INSERT INTO sb3.permessoutente (id_utente, id_permesso) VALUES (0, 0), (0, 1), (0, 2), (0, 3);
+        </sql>
+    </changeSet>
+
+
 
 </databaseChangeLog>
