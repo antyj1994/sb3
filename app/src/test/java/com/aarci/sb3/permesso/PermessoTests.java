@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/*@Log4j2
+@Log4j2
 public class PermessoTests extends Sb3ApplicationTests {
 
     private String authToken;
@@ -41,12 +41,11 @@ public class PermessoTests extends Sb3ApplicationTests {
                 .andReturn();
 
         JSONObject responseJson = new JSONObject(result.getResponse().getContentAsString());
-        String sb= new String(responseJson.get("body").toString());
-        this.authToken = (String) sb.subSequence(11, sb.length()-2);
+        this.authToken = responseJson.getJSONObject("body").getString("token");
     }
 
 
-    // GET USER
+    // GET PERMESSO
 
 
     @Test
@@ -64,13 +63,24 @@ public class PermessoTests extends Sb3ApplicationTests {
     @Test
     @Sql(scripts = {"classpath:data/utente/existingUserWithReadPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:data/rollback/deleteAllFromPermessoutenteAndPermessoAndUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void givenLoggedUserWithoutExistingPermission_WhenGetNonExistingPermission_ThenStatus400() throws Exception {
+    void givenLoggedUserWithReadPermission_WhenGetNonExistingPermission_ThenStatus400() throws Exception {
         Integer id = 1;
 
         mvc.perform(get("/permesso/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", authToken))
                 .andExpect(status().isBadRequest());
+    }
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithoutPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenLoggedUserWithoutReadPermission_WhenGetExistingPermission_ThenStatus403() throws Exception {
+        Integer id = 1;
+
+        mvc.perform(get("/permesso/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken))
+                .andExpect(status().isForbidden());
     }
 
 
@@ -93,11 +103,11 @@ public class PermessoTests extends Sb3ApplicationTests {
     }
 
     @Test
-    @Sql(scripts = {"classpath:data/permesso/existingUserWithCreatePermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/utente/existingUserWithCreatePermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:data/rollback/deleteAllFromPermessoutenteAndPermessoAndUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void givenLoggedUserWithCreatePermissions_WhenCreateExistingPermission_ThenStatus400() throws Exception {
         CreatePermessoCommand command = new CreatePermessoCommand();
-        command.setNome("CREATE_PERMISSION");
+        command.setNome("CREATE");
         command.setDescrizione("this permission let`s you create permission");
 
         mvc.perform(post("/permesso")
@@ -107,8 +117,23 @@ public class PermessoTests extends Sb3ApplicationTests {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithoutPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenLoggedUserWithoutCreatePermission_WhenCreateExistingPermission_ThenStatus403() throws Exception {
+        CreatePermessoCommand command = new CreatePermessoCommand();
+        command.setNome("CREATE");
+        command.setDescrizione("this permission let`s you create permission");
 
-    // DELETE USER
+        mvc.perform(post("/permesso")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken)
+                        .content(new ObjectMapper().writeValueAsString(command)))
+                .andExpect(status().isForbidden());
+    }
+
+
+    // DELETE PERMESSO
 
 
     @Test
@@ -135,8 +160,20 @@ public class PermessoTests extends Sb3ApplicationTests {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithoutPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenLoggedUserWithoutDeletePermission_WhenDeleteExistingPermission_ThenStatus403() throws Exception {
+        Integer id = 1;
 
-    // UPDATE USER
+        mvc.perform(delete("/permesso/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken))
+                .andExpect(status().isForbidden());
+    }
+
+
+    // UPDATE PERMESSO
 
 
     @Test
@@ -145,7 +182,7 @@ public class PermessoTests extends Sb3ApplicationTests {
     void givenLoggedUserWithUpdatePermissions_WhenUpdateExistingPermission_ThenStatus200() throws Exception {
         UpdatePermessoCommand updatePermessoCommand = new UpdatePermessoCommand();
         updatePermessoCommand.setNewNome("EDIT_PERMISISON");
-        updatePermessoCommand.setOldNome("EDIT_USER");
+        updatePermessoCommand.setOldNome("EDIT");
         updatePermessoCommand.setDescrizione("this permission let`s you edit permission");
 
         mvc.perform(put("/permesso")
@@ -172,12 +209,12 @@ public class PermessoTests extends Sb3ApplicationTests {
     }
 
     @Test
-    @Sql(scripts = {"classpath:data/utente/existingMultipleUsersWithEditPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/utente/existingUserWithEditPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:data/rollback/deleteAllFromPermessoutenteAndPermessoAndUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void givenLoggedUserWithUpdatePermissions_WhenUpdateExistingPermissionWithAlreadyExistingName_ThenStatus400() throws Exception {
         UpdatePermessoCommand updatePermessoCommand = new UpdatePermessoCommand();
-        updatePermessoCommand.setNewNome("EDIT_USER");
-        updatePermessoCommand.setOldNome("EDIT_USER");
+        updatePermessoCommand.setNewNome("EDIT");
+        updatePermessoCommand.setOldNome("EDIT");
         updatePermessoCommand.setDescrizione("this permission let`s you edit permission");
 
 
@@ -187,4 +224,21 @@ public class PermessoTests extends Sb3ApplicationTests {
                         .content(new ObjectMapper().writeValueAsString(updatePermessoCommand)))
                 .andExpect(status().isBadRequest());
     }
-}*/
+
+    @Test
+    @Sql(scripts = {"classpath:data/utente/existingUserWithoutPermission.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:data/rollback/deleteAllFromUtente.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void givenLoggedUserWithoutEditPermission_WhenEditExistingPermission_ThenStatus403() throws Exception {
+        UpdatePermessoCommand updatePermessoCommand = new UpdatePermessoCommand();
+        updatePermessoCommand.setNewNome("EDIT");
+        updatePermessoCommand.setOldNome("EDIT");
+        updatePermessoCommand.setDescrizione("this permission let`s you edit permission");
+
+
+        mvc.perform(put("/permesso")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", authToken)
+                        .content(new ObjectMapper().writeValueAsString(updatePermessoCommand)))
+                .andExpect(status().isForbidden());
+    }
+}

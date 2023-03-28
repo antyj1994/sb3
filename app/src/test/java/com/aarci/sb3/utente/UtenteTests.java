@@ -4,21 +4,17 @@ import com.aarci.sb3.Sb3ApplicationTests;
 import com.aarci.sb3.command.CreateUserCommand;
 import com.aarci.sb3.command.LoginCommand;
 import com.aarci.sb3.command.UpdateUserCommand;
-import com.aarci.sb3.login.LoginTests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
-import netscape.javascript.JSObject;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.event.annotation.BeforeTestExecution;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Log4j2

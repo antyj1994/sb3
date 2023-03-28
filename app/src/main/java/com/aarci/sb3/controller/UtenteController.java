@@ -27,7 +27,7 @@ public class UtenteController {
     }
 
     @PostMapping(path = "/utente")
-    @HasPermesso("CREATE_USER")
+    @HasPermesso("CREATE")
     public ResponseWrapperDTO<UtenteDTO> createUtente(@RequestBody CreateUserCommand command){
         log.info("Start createUtente");
         UtenteDTO utenteDTO = this.utenteService.create(command);
@@ -36,17 +36,17 @@ public class UtenteController {
     }
 
     @GetMapping(path = "/utente/{email}")
-    @HasPermesso("READ_USER")
+    @HasPermesso("READ")
     public ResponseWrapperDTO<UtenteDTO> getUtente(@PathVariable("email") String email){
         log.info("Start getUtente");
         UtenteDTO utenteDTO = this.utenteService.getUtente(email);
         log.info("End getUtente");
-        return new ResponseWrapperDTO<>();
+        return new ResponseWrapperDTO<>(utenteDTO);
     }
 
 
     @GetMapping(path = "/utente")
-    @HasPermesso("READ_USER")
+    @HasPermesso("READ")
     public List<ResponseWrapperDTO> getAllUtenti(){
         log.info("Start getAllUtente");
         List<ResponseWrapperDTO> utentiDTO = this.utenteService.getAll();
@@ -55,7 +55,7 @@ public class UtenteController {
     }
 
     @PutMapping(path = "/utente")
-    @HasPermesso("EDIT_USER")
+    @HasPermesso("EDIT")
     public ResponseWrapperDTO<UtenteDTO> updateUtente(@RequestBody UpdateUserCommand command){
         log.info("Start updateUtente");
         UtenteDTO utenteDTO = this.utenteService.update(command);
@@ -64,7 +64,7 @@ public class UtenteController {
     }
 
     @DeleteMapping(path = "/utente/{email}")
-    @HasPermesso("DELETE_USER")
+    @HasPermesso("DELETE")
     public ResponseWrapperDTO<UtenteDTO> deleteUtente(@PathVariable("email") String email){
         log.info("Start deleteUtente");
         UtenteDTO utenteDTO = this.utenteService.delete(email);
@@ -73,16 +73,16 @@ public class UtenteController {
     }
 
     @PostMapping(path = "utente/{email}/permesso/{id_permesso}")
-    @HasPermesso("EDIT_USER")
+    @HasPermesso("EDIT")
     public ResponseWrapperDTO<UtenteDTO> addPermessoAdUtente(@PathVariable("email") String email, @PathVariable("id_permesso") int permesso){
-        log.info("Start deleteUtente");
+        log.info("Start addPermessoAdUtente");
         UtenteDTO utenteDTO = this.utenteService.aggiungiPermesso(email, permesso);
-        log.info("End deleteUtente");
+        log.info("End addPermessoAdUtente");
         return new ResponseWrapperDTO<>(utenteDTO);
     }
 
     @GetMapping(path = "utente/{email}/permesso")
-    @HasPermesso("READ_USER")
+    @HasPermesso("READ")
     public List<ResponseWrapperDTO> getAllPermessiPerUtente(@PathVariable("email") String email){
         log.info("Start getAllPermessiPerUtente");
         List<ResponseWrapperDTO> responseWrapperDTOList = this.utenteService.getAllPermesso(email);
@@ -91,7 +91,7 @@ public class UtenteController {
     }
 
     @DeleteMapping(path = "utente/{email}/permesso/{id_permesso}")
-    @HasPermesso("EDIT_USER")
+    @HasPermesso("DELETE")
     public ResponseWrapperDTO<UtenteDTO> deletePermessoDaUtente(@PathVariable("email") String email, @PathVariable("id_permesso") Integer id){
         log.info("Start deletePermessoDaUtente");
         UtenteDTO utenteDTO = this.utenteService.deletePermessoUtente(email, id);

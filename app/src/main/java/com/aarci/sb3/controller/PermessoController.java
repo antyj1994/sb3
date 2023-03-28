@@ -7,6 +7,7 @@ import com.aarci.sb3.dto.ResponseWrapperDTO;
 import com.aarci.sb3.dto.PermessoDTO;
 import com.aarci.sb3.service.PermessoService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.aarci.sb3.command.UpdatePermessoCommand;
@@ -51,11 +52,11 @@ public class PermessoController {
     }
 
     @ExceptionHandler({ RuntimeException.class })
-    public ResponseWrapperDTO<BaseDTO> handleException(Exception ex) {
+    public ResponseEntity<ResponseWrapperDTO<BaseDTO>> handleException(Exception ex) {
         ResponseWrapperDTO<BaseDTO> responseWrapperDTO = new ResponseWrapperDTO<>();
         responseWrapperDTO.setCode(HttpStatus.BAD_REQUEST.value());
         responseWrapperDTO.setStatus("Error");
         responseWrapperDTO.setMessage(ex.getMessage());
-        return responseWrapperDTO;
+        return ResponseEntity.badRequest().body(responseWrapperDTO);
     }
 }
